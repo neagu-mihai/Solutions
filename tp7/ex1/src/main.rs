@@ -5,6 +5,7 @@ use std::fs::File;
 use std::io::stdin;
 use std::os::raw::c_void;
 use std::os::unix::io::AsRawFd;
+use std::path::Path;
 use std::{slice, str};
 
 fn wait_return() {
@@ -37,6 +38,7 @@ fn main() {
     wait_return();
 
     let f = File::open("Cargo.toml").unwrap();
+    let filesize = Path::new("Cargo.toml").metadata().unwrap().len();
     let fd = f.as_raw_fd();
     // map the first page of the file with no access
     let p = unsafe {
@@ -91,7 +93,7 @@ fn main() {
 
     println!("============================================");
     println!("We could read from the mapped memory even tough we used PROT_WRITE. Why?");
-    let slice = unsafe { slice::from_raw_parts(p as *const u8, pagesize as usize) };
+    let slice = unsafe { slice::from_raw_parts(p as *const u8, filesize as usize) };
     println!(
         "The mapped memory reading:\n{}",
         str::from_utf8(slice).unwrap()
@@ -124,11 +126,12 @@ fn main() {
     println!(" 1. What is the protoction level that we have required?");
     wait_return();
 
-    // TODO ex2: verify that the mapped memory consists only out of 0 value bytes
-    // a) use p.read_volatile() and p.offset()
-    // hint: tyepcast p as *mut u8
-    // b) use a slice
-    // hint: tyepcast p as *mut u8
+    // TODO 1: verify that the mapped memory consists only out of 0 value bytes
+    // a) use a slice
+    // hint: typecast p as *mut u8
+
+    // b) use *p.offset()
+    // hint: typecast p as *mut u8
 
     println!("Answer: 5 pages, 20 KB, PROT_READ and PROT_WRITE");
     wait_return();
@@ -139,5 +142,5 @@ fn main() {
     println!("Take a look to make sure it is not mapped anymore");
     wait_return();
 
-    // TODO ex2: try to access the unmapped memory. What happens?
+    // TODO 2: try to access the unmapped memory. What happens?
 }
