@@ -26,7 +26,7 @@ extern "C" fn sigsegv_handler(_signal: c_int, siginfo: *mut siginfo_t, _extra: *
 
     // TODO 5: count the number of page faults
 
-    // TODO 6: verify is page is in the has map
+    // TODO 6: verify if the page is in the hashmap
     // - if not, this is an actual segfault, exit the process
     // - if yes, increase the protection level None -> Read -> Write
 }
