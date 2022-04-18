@@ -13,6 +13,7 @@ use std::sync::Mutex;
 lazy_static! (
     // usage: let page_faults = PAGE_FAULTS.lock().unwrap()
     //   *page_faults = ...
+    //   drop(page_faults); // when done with it
     static ref PAGE_FAULTS: Mutex<usize> = Mutex::new(0);
     // TODO 6: define a global HashMap<usize, Protection> that will store the protection of each page
 );
