@@ -125,7 +125,14 @@ fn main() {
     println!(" 1. How many pages did map?");
     println!(" 1. What is the protoction level that we have required?");
     wait_return();
-
+    let slice: &[u8]=unsafe{slice::from_raw_parts(p as *mut u8,5*pagesize as usize)};
+    for i in slice.iter()
+    {
+        if i !=&0{
+                println!("error");
+                break;
+        }
+    }
     // TODO 1: verify that the mapped memory consists only out of 0 value bytes
     // a) use a slice
     // hint: typecast p as *mut u8
