@@ -129,21 +129,9 @@ fn main() {
     // TODO 1: verify that the mapped memory consists only out of 0 value bytes
     // a) use a slice
     // hint: typecast p as *mut u8
-    let slice = unsafe { slice::from_raw_parts(p as *mut u8, pagesize as usize) };
-
-    for value in slice {
-        if *value != 0 {
-            println!("Page is not clean");
-        }
-    }
 
     // b) use *p.offset()
     // hint: typecast p as *mut u8
-    for i in 0..pagesize as usize {
-        if unsafe { *((p as *mut u8).offset(i as isize)) } != 0 {
-            println!("Page is not clean");
-        }
-    }
 
     println!("Answer: 5 pages, 20 KB, PROT_READ and PROT_WRITE");
     wait_return();
@@ -155,11 +143,4 @@ fn main() {
     wait_return();
 
     // TODO 2: try to access the unmapped memory. What happens?
-    let slice = unsafe { slice::from_raw_parts(p as *mut u8, pagesize as usize) };
-
-    for value in slice {
-        if *value != 0 {
-            println!("Page is not clean");
-        }
-    }
 }
