@@ -1,13 +1,13 @@
 use nix::unistd::getpid;
-// use std::io::stdin;
+use std::io::stdin;
 use std::sync::mpsc::channel;
 use std::thread;
 
-// fn wait_return() {
-//     println!("Press ENTER to continue");
-//     let mut s = String::new();
-//     stdin().read_line(&mut s).unwrap();
-// }
+fn wait_return() {
+    println!("Press ENTER to continue");
+    let mut s = String::new();
+    stdin().read_line(&mut s).unwrap();
+}
 
 fn main() {
     println!("Run \"watch pmap {}\"", getpid());
@@ -16,43 +16,35 @@ fn main() {
 
     for i in 0..10 {
         // create a channel
-        // let (sender, receiver) = channel();
-        let (sender, receiver) = channel::<(i32, u32)>();
+        let (sender, receiver) = channel();
         senders.push(sender);
         let t = thread::spawn(move || {
             println!("thread {}", i);
             // wair for a message of type ()
-            // let mut n = receiver.recv().unwrap();
+            receiver.recv().unwrap();
             // TODO 2 - duplicate the number and return it
-            // n = n * 2;
             // TODO 5 - compute n^p and return it
-            let (nr, power) = receiver.recv().unwrap();
             // quit
             println!("thread {} done", i);
-            // n
-            nr.pow(power)
         });
         thread_handles.push(t);
         println!("Started {} thread", i + 1);
         println!("Find the page where the thread's stack is allocated");
-        // wait_return();
+        wait_return();
     }
 
     // send a message to all the threads
     for sender in senders {
         // TODO 1 - send a number to a thread
-        // sender.send(2).unwrap();
         // TODO 4 - send a tuple (n, p) with two numbers
-        sender.send((2, 5)).unwrap();
-        // wait_return();
+        sender.send(()).unwrap();
+        wait_return();
     }
 
     // wait for all the threads to exit
-    let mut s = 0;
     for thread_handle in thread_handles {
-        s = s + thread_handle.join().unwrap();
+        thread_handle.join().unwrap();
     }
 
     // TODO 3 - print the sum of all the numbers
-    println!("the sum {}", s);
 }
