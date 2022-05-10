@@ -1,6 +1,7 @@
 use std::io::Read;
 use std::net::TcpListener;
 use std::io::Write;
+use std::net::Shutdown;
 
 fn main() {
     // Listen for connections on 127.0.0.1 (localhost) port 7878
@@ -26,7 +27,8 @@ fn main() {
                     stream.write(s.as_bytes()).unwrap();
                     // TODO 2 close the connection when the received string is "exit"
                     if s=="exit"{
-                        stream.flush().unwrap();
+                        stream.shutdown(Shutdown::Both).unwrap();
+                        break;
                     }
                 }
             }
